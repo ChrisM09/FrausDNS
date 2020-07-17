@@ -24,6 +24,15 @@ namespace Local_Dns_Spoofer.ViewModel
             HeaderString = "[Request] Request Packet";
             UpdateHexViewOutput("HEX UPDATE TEST");
 
+            string error_message;
+            Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], "127.0.0.1", out error_message);
+
+            UpdateOutput(error_message);
+
+            Utilities.ResetLocalDnsServer(NetworkInterfaces[0], out error_message);
+
+            UpdateOutput(error_message);
+
         }
 
         #endregion
@@ -44,7 +53,7 @@ namespace Local_Dns_Spoofer.ViewModel
 
         private void UpdateOutput(string text)
         {
-            OutputString += "\n" + text + "\n" + "\n" + "\n" + "adsfadsfadsfgasdfgadsfgsadfgsadfgsadfgsadfgafgasdfga";
+            OutputString += "\n" + text + "\n" + "\n" + "\n";
         }
 
         private void GetNetworkAdapters()

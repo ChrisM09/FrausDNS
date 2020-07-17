@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -70,6 +71,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\CapturedRequest.cs" />
+    <Compile Include="Model\DnsRequest.cs" />
     <Compile Include="Model\Utilities\Utilities.cs" />
     <Compile Include="ViewModel\Base\BaseViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

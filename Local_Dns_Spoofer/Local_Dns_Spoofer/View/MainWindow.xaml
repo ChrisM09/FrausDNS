@@ -61,10 +61,7 @@
             </TabItem>
 
             
-            
-            
-            
-            
+
             <!-- Raw Hex View Tab-->
             <TabItem Header="DNS Hex View" >
                 <GroupBox Header="{Binding HeaderString}">

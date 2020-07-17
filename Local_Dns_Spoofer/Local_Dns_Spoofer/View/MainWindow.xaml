@@ -67,12 +67,17 @@
             
             <!-- Raw Hex View Tab-->
             <TabItem Header="DNS Hex View" >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
+                <GroupBox Header="{Binding HeaderString}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Margin="5" Text="{Binding HexByteOutput}"/>
+                        <TextBlock Grid.Column="1" Margin="5" Text="{Binding ConvertedOutput}"/>
+                    </Grid>
+                </GroupBox>
             </TabItem>
             
         </TabControl>

@@ -1,0 +1,80 @@
+﻿<Window x:Class="Local_Dns_Spoofer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Local_Dns_Spoofer"
+        mc:Ignorable="d"
+        Title="Updated ApateDNS" Height="500" Width="800">
+    <Grid>
+        <TabControl TabStripPlacement="Top">
+            <!-- DNS View Tab -->
+            <TabItem Header="Capture Window" IsSelected="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1.25*"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*">
+                    </DataGrid>
+
+                    <ScrollViewer Grid.Row="1" Background="Beige" >
+                        <TextBlock Text="{Binding OutputString}"/>
+                    </ScrollViewer>
+
+
+
+                    <Grid Grid.Row="2" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.25*"/>
+                            <ColumnDefinition Width=".75*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Three textblocks (Reply IP, NXDOMAIN, Interface)-->
+                        <StackPanel Orientation="Vertical" Grid.Column="0">
+                            <TextBlock Text="DNS Reply IP (Default: Current Gateway/DNS):" Style="{StaticResource InputLabelTextblockStyle}"/>
+                            <TextBlock Text="# of NXDOMAIN's:" Style="{StaticResource InputLabelTextblockStyle}"/>
+                            <TextBlock Text="Selected Interface:" Style="{StaticResource InputLabelTextblockStyle}"/>
+                        </StackPanel>
+
+                        <!-- 2 Textboxes (Reply IP and NXDOMAIN inputs) and 1 dropdown (interface)-->
+                        <StackPanel Orientation="Vertical" Grid.Column="1">
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}" HorizontalAlignment="Stretch" />
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" />
+                            <ComboBox Style="{StaticResource SelectedInterfaceComboxStyle}" ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface}"/>
+                        </StackPanel>
+                        
+                        
+                        <!-- Buttons -->
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server"/>
+
+
+                    </Grid>
+                    
+                    
+                    
+                </Grid>
+            </TabItem>
+
+            
+            
+            
+            
+            
+            <!-- Raw Hex View Tab-->
+            <TabItem Header="DNS Hex View" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            
+        </TabControl>
+    </Grid>
+</Window>

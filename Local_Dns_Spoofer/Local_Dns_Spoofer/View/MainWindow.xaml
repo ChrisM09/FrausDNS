@@ -17,7 +17,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*">
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True">
                     </DataGrid>
 
                     <ScrollViewer Grid.Row="1" Background="Beige" >
@@ -42,8 +42,8 @@
 
                         <!-- 2 Textboxes (Reply IP and NXDOMAIN inputs) and 1 dropdown (interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="1">
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}" HorizontalAlignment="Stretch" />
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" />
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}" HorizontalAlignment="Stretch" Text="{Binding UserTargetIP}"/>
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN}" />
                             <ComboBox Style="{StaticResource SelectedInterfaceComboxStyle}" ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface}"/>
                         </StackPanel>
                         

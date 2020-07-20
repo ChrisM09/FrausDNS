@@ -1,19 +1,31 @@
-﻿using System;
+﻿using Local_Dns_Spoofer.ViewModel.Base;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.RightsManagement;
 
 namespace Local_Dns_Spoofer.ViewModel
 {
     public class MainWindowViewModel : BaseViewModel
     {
+        private string _targetIP;
+
+
+
         #region Shared Functionality
         public MainWindowViewModel()
         {
+            UserTargetIP = "8.8.8.8";
+
             Requests = new List<CapturedRequest>();
 
             Requests.Add(new CapturedRequest() { Time = new DateTime(1, 1, 1), DomainRequested = "google.com", DnsReturned = "FOUND" });
+
+            for (int i = 0; i < 200; i++)
+            {
+                Requests.Add(new CapturedRequest() { Time = new DateTime(1, 1, 1), DomainRequested = "google.com", DnsReturned = "FOUND" });
+            }
+
+
 
             OutputString = "[+] This is a test run.\nThis is with the new line attached.";
 
@@ -49,7 +61,38 @@ namespace Local_Dns_Spoofer.ViewModel
 
 
 
+        // This will be removed soon. Just for testing purposes.
+        public string UserTargetIP
+        {
+            get
+            {
+                return _targetIP;
+            }
+            set
+            {
+                OutputString += $"\n[+] IP changed from {_targetIP} to {value}";
+                _targetIP = value;
+            }
+        }
+
+
+        // public string UserTargetIP { get; set; }
+
+        public string UserNXDOMAIN { get; set; }
+
+
         public string OutputString { get; set; }
+
+
+
+
+        
+
+        private void UpdatedIPOutput()
+        {
+            OutputString += $"\n[+] IP Changed to {UserTargetIP}";
+        }
+
 
         private void UpdateOutput(string text)
         {
@@ -80,10 +123,6 @@ namespace Local_Dns_Spoofer.ViewModel
             // would call a conversion method here but for now , it's a stub
             ConvertedOutput = "Regular: \t" + replacement;
         }
-
-
-
-
 
         #endregion
 

@@ -24,10 +24,15 @@ namespace Local_Dns_Spoofer
             return entries;
         }
 
-
-        public static void ChangeLocalDnsServer(string interface_name, string DnsString, out string errorMessage)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interface_name"></param>
+        /// <param name="errorMessage"></param>
+        /// <remarks> RUN AS ADMINISTRATOR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</remarks>
+        public static void ChangeLocalDnsServer(string interface_name, out string errorMessage)
         {
-            string[] Dns = { DnsString };
+            string[] Dns = { "127.0.0.1" };
 
             // Get the actual network interface to work with.
             List<NetworkInterface> nics = NetworkInterface.GetAllNetworkInterfaces()
@@ -66,7 +71,7 @@ namespace Local_Dns_Spoofer
             }
 
             // No errors have occured here. DNS set successfully.
-            errorMessage = "[+] Dns redirection complete. Dns server now " + DnsString;
+            errorMessage = $"[+] Dns redirection complete\n[+] Local DNS Server is now localhost (127.0.0.1) on {interface_name}";
         }
 
 

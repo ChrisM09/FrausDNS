@@ -49,8 +49,8 @@
                         
                         
                         <!-- Buttons -->
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server"/>
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}"/>
 
 
                     </Grid>

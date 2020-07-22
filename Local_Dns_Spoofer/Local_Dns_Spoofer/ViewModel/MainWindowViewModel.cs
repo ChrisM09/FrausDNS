@@ -52,7 +52,8 @@ namespace Local_Dns_Spoofer.ViewModel
 
         private DnsSpoofer _spoofer { get; set; }
 
-        private Progress<CapturedRequest> progress { get; set; }
+        private Progress<CapturedRequest> CapturedRequestProgress { get; set; }
+        private Progress<string> ErrorMessageProgress { get; set; }
 
         ///// <summary>
         ///// Private list of captured requests for use in 
@@ -114,38 +115,27 @@ namespace Local_Dns_Spoofer.ViewModel
             Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], out error_message);
             UpdateOutput(error_message);
 
-
-            // DNS Server updated to localhost.
-
-            // Print out a line saying "Sending x NXDOMAIN replies to clients.
+            
             UpdateOutput($"Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
 
-            progress = new Progress<CapturedRequest>();
-            progress.ProgressChanged += Progress_ProgressChanged;
+            // Captured Request gotten from the server.
+            CapturedRequestProgress = new Progress<CapturedRequest>();
+            CapturedRequestProgress.ProgressChanged += (sender, e) => { Requests.Add(e); };
 
+            // Error Message gotten from the server.
+            ErrorMessageProgress = new Progress<string>();
+            ErrorMessageProgress.ProgressChanged += (sender, e) => { UpdateOutput(e); };
 
 
             // Fire and forget type deal. Have it running in the background?
             _spoofer = new DnsSpoofer(UserTargetIP);
             
-            // Start will need to have a progress associated with it to
-            // update the DataGrid.
-
-            
-
-
-            await _spoofer.Start(progress);
-
-
+            // Start with the capture request and error message progresses to update the UI
+            await _spoofer.Start(CapturedRequestProgress, ErrorMessageProgress);
 
 
             // Once all the way done, Then print out "Server started at DateTime.Now
             UpdateOutput("Server Exection Completed.!");
-        }
-
-        private void Progress_ProgressChanged(object sender, CapturedRequest e)
-        {
-            Requests.Add(e);
         }
 
         /// <summary>

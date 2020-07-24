@@ -3,103 +3,137 @@ using Local_Dns_Spoofer.ViewModel.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Security.RightsManagement;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Local_Dns_Spoofer.ViewModel
 {
-    public class MainWindowViewModel : BaseViewModel
+    public class MainWindowViewModel : BaseViewModel, IDataErrorInfo
     {
 
         #region Shared Functionality
         public MainWindowViewModel()
         {
-            UserTargetIP = "8.8.8.8";
-            UserNXDOMAIN = "0";
+            initialSetup();
 
-            StartServer = new RelayCommand(startServer);
-            StopServer = new RelayCommand(stopServer);
-
-            Requests = new ObservableCollection<CapturedRequest>();
-
-            Requests.Add(new CapturedRequest() { Time = new DateTime(1, 1, 1), DomainRequested = "google.com", DnsReturned = "FOUND" });
-
-            //for (int i = 0; i < 200; i++)
-            //{
-            //    Requests.Add(new CapturedRequest() { Time = new DateTime(1, 1, 1), DomainRequested = "google.com", DnsReturned = "FOUND" });
-            //}
-
-
-
-            GetNetworkAdapters();
-
-            //string error_message;
-            //Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], out error_message);
-
-
-            HeaderString = "[Request] Request Packet";
-            UpdateHexViewOutput("HEX UPDATE TEST");
-
+            Requests.Add(new CapturedRequest(new byte[] { 0 }) { Time = DateTime.Now, DnsReturned = "test", DomainRequested = "TEST.COM" }); 
         }
 
         #endregion
 
 
+        #region IDataErrorInfo Members
+
+        /// <summary>
+        /// Non-used error code. Needed for DataErrorInfo.
+        /// </summary>
+        string IDataErrorInfo.Error { get { return null; } }
+
+        /// <summary>
+        /// Report any error based on a property back to the UI and place it into the tool tip.
+        /// </summary>
+        /// <param name="columnName">The property that was changed within the ViewModel</param>
+        /// <returns>Either an error message or null dependent if the input was valid.</returns>
+        string IDataErrorInfo.this[string columnName]
+        {
+            get
+            {
+                string error_message = null;
+                switch (columnName)
+                {
+                    case "UserTargetIP":
+                        {
+                            // Check here for matching up against a certain form (regex?)
+                            if (!isUserTargetIPValid())
+                            {
+                                error_message = "IP not in the form xxx.xxx.xxx.xxx";
+                            }
+                            break;
+                        }
+                    case "UserNXDOMAIN":
+                        {
+                            // Check if it's not empty, is integers only and is greater than 0
+                            if (!isUserNXDOMAINValid())
+                            {
+                                error_message = "NXDOMAINs must have a value that is an integer greater than or equal to 0.";
+                            }
+                            break;
+                        }
+                    case "SelectedInterface":
+                        {
+                            // The choice is made from a drop down, so just check if it's empty.
+                            if (!isSelectedInterfaceValid())
+                            {
+                                error_message = "An interface needs to be selected.";
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            error_message = "Unknown Error.";
+                            break;
+                        }
+                }
+                return error_message;
+            }
+        }
+        #endregion
+
 
         #region Capture Window Functionality
 
+        #region Private Capture Window members
         private DnsSpoofer _spoofer { get; set; }
+        private Progress<CapturedRequest> _capturedRequestProgress { get; set; }
+        private Progress<string> _errorMessageProgress { get; set; }
+        private bool _serverStarted { get; set; }
+        #endregion
 
-        private Progress<CapturedRequest> CapturedRequestProgress { get; set; }
-        private Progress<string> ErrorMessageProgress { get; set; }
+        #region Public Capture Window Members 
+        public bool StartServerEnabled
+        {
+            get
+            {
+                // Check the inputs and enable button if they're all acceptable.
+                return
+                    isUserTargetIPValid() &&
+                    isUserNXDOMAINValid() &&
+                    isSelectedInterfaceValid() &&
+                    (_serverStarted == false);
 
-        ///// <summary>
-        ///// Private list of captured requests for use in 
-        ///// </summary>
-        //private ListCapturedRequests _capRequests { get; set; } = new ListCapturedRequests();
-
-
-
-        //public ListCapturedRequests CapRequests { 
-        //    get
-        //    {
-        //        return _capRequests;
-        //    }
-        //    set
-        //    {
-        //        Requests = _capRequests.requests;
-        //    }
-        //}
-
-
-
+            }
+        }
+        public bool StopServerEnabled
+        {
+            get
+            {
+                return _serverStarted == true;
+            }
+        }
         public ObservableCollection<CapturedRequest> Requests { get; set; }
-
-
-
-
-
         public List<string> NetworkInterfaces { get; set; }
-
+        public string UserTargetIP { get; set; }
+        public string UserNXDOMAIN { get; set; }
         public string SelectedInterface { get; set; }
-
-
-
-
-
-        public string UserTargetIP { get; set; }  
-        public string UserNXDOMAIN { get; set; }  
-
-
         public string OutputString { get; set; }
+        #endregion
 
-
-
-
+        #region Public Capture Window Commands
         public RelayCommand StartServer { get; set; }
         public RelayCommand StopServer { get; set; }
+        #endregion
+
+        #region Private Capture Window Methods
 
         /// <summary>
         /// Starts running the DNS server in the background. Changes the LocalDNSServer to the specified IP.
@@ -108,34 +142,37 @@ namespace Local_Dns_Spoofer.ViewModel
         {
 
             // Print the configuration options here to the console.
-            UpdateOutput($"Using IP address {UserTargetIP} for DNS replies.");
+            updateOutput($"Using IP address {UserTargetIP} for DNS replies.");
 
             // Change the local DNS Server to localhost on a given NW interface.
             string error_message;
             Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], out error_message);
-            UpdateOutput(error_message);
+            updateOutput(error_message);
 
             
-            UpdateOutput($"Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
+            updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
 
             // Captured Request gotten from the server.
-            CapturedRequestProgress = new Progress<CapturedRequest>();
-            CapturedRequestProgress.ProgressChanged += (sender, e) => { Requests.Add(e); };
+            _capturedRequestProgress = new Progress<CapturedRequest>();
+            _capturedRequestProgress.ProgressChanged += (sender, e) => 
+            { 
+                Requests.Add(e);
+            };
 
             // Error Message gotten from the server.
-            ErrorMessageProgress = new Progress<string>();
-            ErrorMessageProgress.ProgressChanged += (sender, e) => { UpdateOutput(e); };
+            _errorMessageProgress = new Progress<string>();
+            _errorMessageProgress.ProgressChanged += (sender, e) => { updateOutput(e); };
 
 
-            // Fire and forget type deal. Have it running in the background?
-            _spoofer = new DnsSpoofer(UserTargetIP);
-            
+            // Fire and forget type deal. Have it running in the background
+            _spoofer = new DnsSpoofer(UserTargetIP, int.Parse(UserNXDOMAIN));
+
+
+            // update the bool to avoid starting server again.
+            _serverStarted = true;
+
             // Start with the capture request and error message progresses to update the UI
-            await _spoofer.Start(CapturedRequestProgress, ErrorMessageProgress);
-
-
-            // Once all the way done, Then print out "Server started at DateTime.Now
-            UpdateOutput("Server Exection Completed.!");
+            await _spoofer.Start(_capturedRequestProgress, _errorMessageProgress);
         }
 
         /// <summary>
@@ -147,27 +184,95 @@ namespace Local_Dns_Spoofer.ViewModel
 
             Utilities.ResetLocalDnsServer(NetworkInterfaces[0], out error_message);
 
-            UpdateOutput(error_message);
+            updateOutput(error_message);
 
             _spoofer.Stop();
 
-            UpdateOutput("Server Stopped. Hopefully correctly.");
+            _serverStarted = false;
+
+            updateOutput("Server Stopped.");
         }
 
-        private void UpdateOutput(string text)
+        /// <summary>
+        /// Updates the output console window.
+        /// </summary>
+        /// <param name="text">Text to display on the screen.</param>
+        private void updateOutput(string text)
         {
             OutputString += "\n" + text;
         }
 
-        private void GetNetworkAdapters()
+        /// <summary>
+        /// Gets the network adapters from the local machine.
+        /// </summary>
+        private void getNetworkAdapters()
         {
             NetworkInterfaces = Utilities.GetNetworkInterfaces();
         }
+
+        /// <summary>
+        /// Validates if the Target IP is of the valid form.
+        /// </summary>
+        /// <returns>Whether or not the target IP is in the correct format.</returns>
+        private bool isUserTargetIPValid()
+        {
+            return 
+                !string.IsNullOrWhiteSpace(UserTargetIP) &&
+                Regexes.IPAddressForm.IsMatch(UserTargetIP);
+        }
+
+        /// <summary>
+        /// Validates if the NXDOMAIN number is of the valid form.
+        /// </summary>
+        /// <returns>Whether or not the NXDOMAIN number is in the correct format.</returns>
+        private bool isUserNXDOMAINValid()
+        {
+            return
+                !string.IsNullOrEmpty(UserNXDOMAIN) &&
+                Regexes.IntegerOnly.IsMatch(UserNXDOMAIN) &&
+                int.Parse(UserNXDOMAIN) >= 0;
+
+        }
+
+        /// <summary>
+        /// Validates if there is an interface selected.
+        /// </summary>
+        /// <returns>Whether or not an interface is selected.</returns>
+        private bool isSelectedInterfaceValid()
+        {
+            return !string.IsNullOrEmpty(SelectedInterface);
+        }
+        
+        /// <summary>
+        /// Performs initial setup of the applcation. 
+        /// </summary>
+        /// <remarks>
+        /// Will set up default DNS choices, set NXDOMAIN to 0, initializes commands,
+        /// and gets the list of network adapters.
+        /// </remarks>
+        private void initialSetup()
+        {
+            Tuple<string, string> defaultDns = Utilities.GetDefaultDnsAddress();
+            SelectedInterface = defaultDns.Item1;
+            UserTargetIP = defaultDns.Item2;
+            UserNXDOMAIN = "0";
+
+            StartServer = new RelayCommand(startServer);
+            StopServer = new RelayCommand(stopServer);
+
+            Requests = new ObservableCollection<CapturedRequest>();
+            getNetworkAdapters();
+        }
+        #endregion
+
         #endregion
 
 
 
         #region DNS Hex View Functionality
+        private CapturedRequest _selectedRequest { get; set; }
+
+
 
         public string HexByteOutput { get; set; }
 
@@ -175,13 +280,26 @@ namespace Local_Dns_Spoofer.ViewModel
 
         public string HeaderString { get; set; }
 
+        public CapturedRequest SelectedRequest 
+        {  
+            get
+            {
+                return _selectedRequest;
+            }
+            set
+            {
+                UpdateHexViewOutput(value.data);
+                _selectedRequest = value;
+            }
+        
+        }
 
-
-        private void UpdateHexViewOutput(string replacement)
+        private void UpdateHexViewOutput(byte[] replacement)
         {
-            HexByteOutput = "Hex:\t" + replacement;
-            // would call a conversion method here but for now , it's a stub
-            ConvertedOutput = "Regular: \t" + replacement;
+            string hex = Converters.byteToHex(replacement);
+
+            HexByteOutput = "Hex:\t" + Converters.formatHex(hex);
+            ConvertedOutput = "Regular: \t" + Converters.PrintRawHex(hex);
         }
 
         #endregion
@@ -190,4 +308,5 @@ namespace Local_Dns_Spoofer.ViewModel
 
 
     }
+
 }

@@ -34,5 +34,16 @@ namespace Local_Dns_Spoofer
 
 
         }
+
+        /// <summary>
+        /// Changes the tab when a row is double clicked in the DNS Capture Window.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Double click mouse button arugments.</param>
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Tabs.SelectedIndex = 1;
+            e.Handled = true;
+        }
     }
 }

@@ -11,38 +11,40 @@ namespace Local_Dns_Spoofer
 
         /// <summary>
         /// Formats a hex string and will print it out to the console.
-        /// Future: Modify it to give a string back to put for hex view.
         /// </summary>
         /// <param name="input">The unformatted hex string.</param>
         /// <remarks>
         /// Modified https://github.com/AdvancedHacker101/c-sharp-Dns-Server 's code
         /// to work with this application.
         /// </remarks>
-        public static void formatHex(string input)
+        public static string formatHex(string input)
         {
+            string output = "";
             int counter = 0;
             int is2 = 0;
             for (int i = 0; i < input.Length; i++)
             {
                 if (counter != 0 && counter % 16 == 0)
-                    Console.Write("  ");
+                    output += "  ";
 
                 if (counter > 31)
                 {
                     counter = 0;
-                    Console.Write("\n");
+                    output += "\n";
                 }
 
-                Console.Write(input[i]);
+                output += input[i];
 
                 if (is2 == 1)
                 {
                     is2 = -1;
-                    Console.Write(" ");
+                    output += " ";
                 }
                 counter++;
                 is2++;
             }
+
+            return output;
         }
 
         /// <summary>
@@ -56,26 +58,40 @@ namespace Local_Dns_Spoofer
         /// </remarks>
         public static string byteToHex(byte[] input)
         {
-            int counter = 0;
             string fullDump = "";
             foreach (int byt in input)
             {
-                if (counter > 15)
-                {
-                    counter = 0;
-                }
-
                 string hex = byt.ToString("X");
                 if (hex.Length == 1) hex = "0" + hex;
                 fullDump += hex;
-                counter++;
             }
 
             return fullDump;
         }
 
 
+        public static string PrintRawHex(string HexDump)
+        {
+            // Every two find decimal equivalent.
+            int substr_start = 0;
+            string converted = "";
 
+            while(substr_start < HexDump.Length)
+            {
+                // Get two characters.
+                string HexChar = HexDump.Substring(substr_start, 2);
+                int hex_value = Int16.Parse(HexChar, System.Globalization.NumberStyles.AllowHexSpecifier);
+                char result = '.';
+                if((hex_value >= 65 && hex_value <= 90) || (hex_value >= 97 && hex_value <= 122) || (hex_value >= 48 && hex_value <= 57))
+                {
+                    result = (char)hex_value;
+                }
+                converted += result;
+                substr_start += 2;
+            }
+
+            return converted;
+        }
 
     }
 }

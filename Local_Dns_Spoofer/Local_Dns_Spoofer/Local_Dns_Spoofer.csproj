@@ -82,9 +82,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\CapturedRequest.cs" />
-    <Compile Include="Model\DnsRequest.cs" />
     <Compile Include="Model\DnsSpoofer.cs" />
     <Compile Include="Model\Utilities\Converters.cs" />
+    <Compile Include="Model\Utilities\Regexes.cs" />
     <Compile Include="Model\Utilities\Utilities.cs" />
     <Compile Include="ViewModel\Base\BaseViewModel.cs" />
     <Compile Include="ViewModel\Base\RelayCommand.cs" />

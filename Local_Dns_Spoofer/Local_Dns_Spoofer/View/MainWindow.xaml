@@ -7,32 +7,42 @@
         mc:Ignorable="d"
         Title="Updated ApateDNS" Height="500" Width="800">
     <Grid>
-        <TabControl TabStripPlacement="Top">
+        <TabControl TabStripPlacement="Top" Name="Tabs">
             <!-- DNS View Tab -->
             <TabItem Header="Capture Window" IsSelected="True">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22*"/>
+                        <ColumnDefinition Width="109*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="1.25*"/>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True">
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True" Grid.ColumnSpan="2" 
+                              SelectedItem="{Binding SelectedRequest}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
+                            <DataGridTextColumn Header="Domain Requested" Binding="{Binding DomainRequested}"/>
+                            <DataGridTextColumn Header="Dns Returned" Binding="{Binding DnsReturned}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
 
-                    <ScrollViewer Grid.Row="1" Background="Beige" >
+                    <ScrollViewer Grid.Row="1" Background="Beige" Grid.ColumnSpan="2" >
                         <TextBlock Text="{Binding OutputString}"/>
                     </ScrollViewer>
 
 
 
-                    <Grid Grid.Row="2" >
+                    <Grid Grid.Row="2" Grid.ColumnSpan="2" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="1.25*"/>
                             <ColumnDefinition Width=".75*"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <!-- Three textblocks (Reply IP, NXDOMAIN, Interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="0">
                             <TextBlock Text="DNS Reply IP (Default: Current Gateway/DNS):" Style="{StaticResource InputLabelTextblockStyle}"/>
@@ -42,25 +52,25 @@
 
                         <!-- 2 Textboxes (Reply IP and NXDOMAIN inputs) and 1 dropdown (interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="1">
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}" HorizontalAlignment="Stretch" Text="{Binding UserTargetIP}"/>
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN}" />
-                            <ComboBox Style="{StaticResource SelectedInterfaceComboxStyle}" ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface}"/>
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            <ComboBox Style="{StaticResource SelectedInterfaceComboxStyle}" ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
-                        
-                        
+
+
                         <!-- Buttons -->
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}"/>
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}" IsEnabled="{Binding StartServerEnabled}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}" IsEnabled="{Binding StopServerEnabled}"/>
 
 
                     </Grid>
-                    
-                    
-                    
+
+
+
                 </Grid>
             </TabItem>
 
-            
+
 
             <!-- Raw Hex View Tab-->
             <TabItem Header="DNS Hex View" >
@@ -76,7 +86,7 @@
                     </Grid>
                 </GroupBox>
             </TabItem>
-            
+
         </TabControl>
     </Grid>
 </Window>

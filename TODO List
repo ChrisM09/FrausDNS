@@ -1,14 +1,19 @@
-Make the DataGrid follow the newest entry.
+- Make the DataGrid follow the newest entry.
 
-Have the console follow the newest entry
-
-Have the IP address only accept X number of characters.
+- Have the console follow the newest entry
 
 
-Modify Selected Interface choice to the user's selection.
 
 
-Implement the NXDOMAIN part of the spoofer.
-	- NameError is the NXDOMAIN equivalent in dns. 
-	- Find a way to create that type of record.
-	- Response.ResponseCode.NameError
+
+
+
+- Update the UI
+	- Change colors 
+
+
+
+
+- Ask Fu if he'd like some other function in this. (Probably regret that)
+
+

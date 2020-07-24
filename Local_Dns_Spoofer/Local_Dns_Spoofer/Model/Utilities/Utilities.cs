@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DNS.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -7,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Local_Dns_Spoofer
 {
@@ -113,6 +115,31 @@ namespace Local_Dns_Spoofer
             errorMessage = "[+] Dns reset complete. Dns search order now empty.";
 
         }
+
+
+
+        public static Tuple<string, string> GetDefaultDnsAddress()
+        {
+            Tuple<string, string> result = new Tuple<string, string>("", "");
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in adapters)
+            {
+                if (adapter.OperationalStatus == OperationalStatus.Up)
+                {
+                    IPInterfaceProperties adapterProperties = adapter.GetIPProperties();
+                    IPAddressCollection dnsServers = adapterProperties.DnsAddresses;
+                    if (dnsServers.Count > 0)
+                    {
+                        // The first NW adapter and the first DNS address is what we will send back.
+                        result = new Tuple<string, string>(adapter.Name, dnsServers[0].ToString());
+                        break;
+
+                    }
+                }
+            }
+            return result;
+        }
+        
 
     }
 }

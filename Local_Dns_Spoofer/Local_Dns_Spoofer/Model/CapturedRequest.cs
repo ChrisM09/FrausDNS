@@ -11,8 +11,15 @@ namespace Local_Dns_Spoofer
     /// </summary>
     public class CapturedRequest
     {
+        public CapturedRequest(byte[] _data)
+        {
+            data = _data;
+        }
+
         public DateTime Time { get; set; }
         public string DomainRequested { get; set; }
         public string DnsReturned { get; set; }
+
+        public byte[] data;
     }
 }

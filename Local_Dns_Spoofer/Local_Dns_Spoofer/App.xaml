@@ -4,7 +4,16 @@
              xmlns:local="clr-namespace:Local_Dns_Spoofer"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-        
+
+        <!-- General Error checking style -->
+        <Style TargetType="{x:Type FrameworkElement}" x:Key="ValidatingControl">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding Path=(Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <!--Start and Stop Server Button Style-->
         <Style TargetType="Button" x:Key="Start_Stop_Button_Style" >
             <Setter Property="Height" Value="35" />
@@ -20,8 +29,8 @@
         </Style>
 
         <!-- User input Textbox Style -->
-        
-        <Style TargetType="TextBox" x:Key="UserInputTextboxStyle">
+        <!-- This MUST come after the ValidatingControl style or else it will crash.-->
+        <Style TargetType="TextBox" x:Key="UserInputTextboxStyle" BasedOn="{StaticResource ValidatingControl}">
             <Setter Property="Height" Value="25"/>
             <Setter Property="Margin" Value="15,5,0,5" />
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -32,7 +41,9 @@
         <Style TargetType="ComboBox" x:Key="SelectedInterfaceComboxStyle">
             <Setter Property="Margin" Value="15,5,0,5" />
         </Style>
-        
+
+
+       
         
     </Application.Resources>
 </Application>

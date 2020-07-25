@@ -14,7 +14,10 @@ namespace Local_Dns_Spoofer
 {
     public class Utilities
     {
-
+        /// <summary>
+        /// Gets a list of the names of the network interfaces.
+        /// </summary>
+        /// <returns>A list of strings containing the names of the network interfaces.</returns>
         public static List<string> GetNetworkInterfaces()
         {
             List<string> entries = new List<string>();
@@ -27,11 +30,11 @@ namespace Local_Dns_Spoofer
         }
 
         /// <summary>
-        /// 
+        /// Changes the local DNS server to the loopback address.
         /// </summary>
-        /// <param name="interface_name"></param>
-        /// <param name="errorMessage"></param>
-        /// <remarks> RUN AS ADMINISTRATOR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</remarks>
+        /// <param name="interface_name">Network interface to change.</param>
+        /// <param name="errorMessage">Status message that will contain either an error or a pass message.</param>
+        /// <remarks> Must run as an administrator to see the desired effect.</remarks>
         public static void ChangeLocalDnsServer(string interface_name, out string errorMessage)
         {
             string[] Dns = { "127.0.0.1" };
@@ -76,7 +79,12 @@ namespace Local_Dns_Spoofer
             errorMessage = $"[+] Dns redirection complete\n[+] Local DNS Server is now localhost (127.0.0.1) on {interface_name}";
         }
 
-
+        /// <summary>
+        /// Resets the local DNS server search order back to nothing. 
+        /// </summary>
+        /// <param name="interface_name">Interface to change.</param>
+        /// <param name="errorMessage">Status message that will contain either an error or a pass message.</param>
+        /// <remarks>Note that all previous DNS orderings will be lost.</remarks>
         public static void ResetLocalDnsServer(string interface_name, out string errorMessage)
         {
             // Get the actual network interface to work with.
@@ -116,8 +124,10 @@ namespace Local_Dns_Spoofer
 
         }
 
-
-
+        /// <summary>
+        /// Attempts to determine the current default DNS address.
+        /// </summary>
+        /// <returns>Either a pair that indicates the first NW adapter's first DNS address or nothing.</returns>
         public static Tuple<string, string> GetDefaultDnsAddress()
         {
             Tuple<string, string> result = new Tuple<string, string>("", "");
@@ -139,7 +149,5 @@ namespace Local_Dns_Spoofer
             }
             return result;
         }
-        
-
     }
 }

@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Local_Dns_Spoofer"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-
+ 
         <!-- General Error checking style -->
         <Style TargetType="{x:Type FrameworkElement}" x:Key="ValidatingControl">
             <Style.Triggers>
@@ -38,12 +38,10 @@
         </Style>
 
         <!-- Selected Interface Combobox Style -->
-        <Style TargetType="ComboBox" x:Key="SelectedInterfaceComboxStyle">
+        <!-- This MUST come after the ValidatingControl style or else it will crash.-->
+        <Style TargetType="ComboBox" x:Key="SelectedInterfaceComboxStyle" BasedOn="{StaticResource ValidatingControl}">
             <Setter Property="Margin" Value="15,5,0,5" />
         </Style>
 
-
-       
-        
     </Application.Resources>
 </Application>

@@ -22,15 +22,16 @@ namespace Local_Dns_Spoofer.ViewModel
     {
 
         #region Shared Functionality
+
+        /// <summary>
+        /// Creates an instance of the Main Window View Model.
+        /// </summary>
         public MainWindowViewModel()
         {
-            initialSetup();
-
-            Requests.Add(new CapturedRequest(new byte[] { 0 }) { Time = DateTime.Now, DnsReturned = "test", DomainRequested = "TEST.COM" }); 
+            initialSetup(); 
         }
 
         #endregion
-
 
         #region IDataErrorInfo Members
 
@@ -89,7 +90,6 @@ namespace Local_Dns_Spoofer.ViewModel
         }
         #endregion
 
-
         #region Capture Window Functionality
 
         #region Private Capture Window members
@@ -140,38 +140,28 @@ namespace Local_Dns_Spoofer.ViewModel
         /// </summary>
         private async void startServer()
         {
-
             // Print the configuration options here to the console.
-            updateOutput($"Using IP address {UserTargetIP} for DNS replies.");
+            updateOutput($"[+] Using IP address {UserTargetIP} for DNS replies.");
 
             // Change the local DNS Server to localhost on a given NW interface.
             string error_message;
             Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], out error_message);
             updateOutput(error_message);
-
             
             updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
 
             // Captured Request gotten from the server.
             _capturedRequestProgress = new Progress<CapturedRequest>();
-            _capturedRequestProgress.ProgressChanged += (sender, e) => 
-            { 
-                Requests.Add(e);
-            };
+            _capturedRequestProgress.ProgressChanged += (sender, e) => { Requests.Add(e); };
 
             // Error Message gotten from the server.
             _errorMessageProgress = new Progress<string>();
             _errorMessageProgress.ProgressChanged += (sender, e) => { updateOutput(e); };
 
-
-            // Fire and forget type deal. Have it running in the background
             _spoofer = new DnsSpoofer(UserTargetIP, int.Parse(UserNXDOMAIN));
-
-
-            // update the bool to avoid starting server again.
             _serverStarted = true;
 
-            // Start with the capture request and error message progresses to update the UI
+            // Start the server and have it report back.
             await _spoofer.Start(_capturedRequestProgress, _errorMessageProgress);
         }
 
@@ -267,19 +257,16 @@ namespace Local_Dns_Spoofer.ViewModel
 
         #endregion
 
-
-
         #region DNS Hex View Functionality
+
+        #region Private DNS Hex View Members
         private CapturedRequest _selectedRequest { get; set; }
+        #endregion
 
-
-
+        #region Public DNS Hex View Members
         public string HexByteOutput { get; set; }
-
         public string ConvertedOutput { get; set; }
-
         public string HeaderString { get; set; }
-
         public CapturedRequest SelectedRequest 
         {  
             get
@@ -293,20 +280,21 @@ namespace Local_Dns_Spoofer.ViewModel
             }
         
         }
+        #endregion
+
+        #region Private DNS Hex View Methods
 
         private void UpdateHexViewOutput(byte[] replacement)
         {
             string hex = Converters.byteToHex(replacement);
 
             HexByteOutput = "Hex:\t" + Converters.formatHex(hex);
-            ConvertedOutput = "Regular: \t" + Converters.PrintRawHex(hex);
+            ConvertedOutput = "Regular: \t" + Converters.GetSimplifiedHexDump(hex);
         }
 
         #endregion
 
-
-
-
+        #endregion
     }
 
 }

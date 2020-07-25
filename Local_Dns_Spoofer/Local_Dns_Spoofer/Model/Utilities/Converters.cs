@@ -69,8 +69,13 @@ namespace Local_Dns_Spoofer
             return fullDump;
         }
 
-
-        public static string PrintRawHex(string HexDump)
+        /// <summary>
+        /// Will give back a simplified string of a hex dump with alphanumeric characters only.
+        /// A-Z, a-z and 0-9. Anything else will turn into ".". 
+        /// </summary>
+        /// <param name="HexDump">The raw hex dump to print.</param>
+        /// <returns>A simplified string containing the alphnumeric characters of the hex dump.</returns>
+        public static string GetSimplifiedHexDump(string HexDump)
         {
             // Every two find decimal equivalent.
             int substr_start = 0;
@@ -92,6 +97,5 @@ namespace Local_Dns_Spoofer
 
             return converted;
         }
-
     }
 }

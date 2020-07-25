@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Local_Dns_Spoofer"
         mc:Ignorable="d"
         Title="Updated ApateDNS" Height="500" Width="800">
+    
     <Grid>
         <TabControl TabStripPlacement="Top" Name="Tabs">
+            
             <!-- DNS View Tab -->
             <TabItem Header="Capture Window" IsSelected="True">
                 <Grid>
@@ -21,6 +22,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <!-- DNS Capture Window -->
                     <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True" Grid.ColumnSpan="2" 
                               SelectedItem="{Binding SelectedRequest}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick">
                         <DataGrid.Columns>
@@ -30,12 +32,13 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!-- Console Output Window -->
                     <ScrollViewer Grid.Row="1" Background="Beige" Grid.ColumnSpan="2" >
                         <TextBlock Text="{Binding OutputString}"/>
                     </ScrollViewer>
 
 
-
+                    <!-- User Input TextBoxes and Input Description TextBlocks -->
                     <Grid Grid.Row="2" Grid.ColumnSpan="2" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -61,16 +64,9 @@
                         <!-- Buttons -->
                         <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}" IsEnabled="{Binding StartServerEnabled}"/>
                         <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}" IsEnabled="{Binding StopServerEnabled}"/>
-
-
                     </Grid>
-
-
-
                 </Grid>
             </TabItem>
-
-
 
             <!-- Raw Hex View Tab-->
             <TabItem Header="DNS Hex View" >
@@ -86,7 +82,6 @@
                     </Grid>
                 </GroupBox>
             </TabItem>
-
         </TabControl>
     </Grid>
 </Window>

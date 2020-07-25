@@ -17,6 +17,9 @@ namespace Local_Dns_Spoofer.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class BaseViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Event that is fired when a property is changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
     }
 }

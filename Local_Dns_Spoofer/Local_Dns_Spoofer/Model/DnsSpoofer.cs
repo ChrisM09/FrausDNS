@@ -4,28 +4,26 @@ using DNS.Protocol.ResourceRecords;
 using DNS.Server;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Local_Dns_Spoofer
 {
+    /// <summary>
+    /// A DNS spoofer that will give back a number of NXDOMAIN responses and
+    /// will send a specified IP address to every request.
+    /// </summary>
     public class DnsSpoofer
     {
-
-        public DnsSpoofer(string IP = "127.0.0.1", int nxdomain = 0)
-        {
-            TargetIP = IP;
-            NXDOMAINs = nxdomain;
-        }
-
+        #region Private Members
         /// <summary>
         /// IP to spoof DNS requests with.
         /// </summary>
         private string TargetIP { get; set; }
+        /// <summary>
+        /// Number of NXDOMAIN responses per domain.
+        /// </summary>
         private int NXDOMAINs { get; set; }
 
         /// <summary>
@@ -33,6 +31,20 @@ namespace Local_Dns_Spoofer
         /// </summary>
         private DnsServer _server;
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Creates an instance of the DNS spoofer
+        /// </summary>
+        /// <param name="IP">Target IP to spoof DNS requests. Default is loopback address.</param>
+        /// <param name="NXInput">Number of NXDOMAIN responses wanted per domain. Default is 0.</param>
+        public DnsSpoofer(string IP = "127.0.0.1", int NXInput = 0)
+        {
+            TargetIP = IP;
+            NXDOMAINs = NXInput;
+        }
 
         /// <summary>
         /// Begins the server and will report back with any requests it finds.
@@ -53,7 +65,6 @@ namespace Local_Dns_Spoofer
                 else dnsReturned = e.Response.ResponseCode.ToString();
 
                 // Format the request here.
-                // Currently prints out a lot but look at the question record and get the name.
                 CapturedRequest request = new CapturedRequest(e.Data)
                     { 
                         DnsReturned = dnsReturned, 
@@ -61,16 +72,8 @@ namespace Local_Dns_Spoofer
                         Time = DateTime.Now 
                     };
 
-                // Send the newly captured request back for logging
+                // Send the newly created captured request back for logging
                 CaptureRequest_progress.Report(request);
-
-
-
-                // Testing purposes
-                Error_progress.Report("The person sending this data was " + e.Remote.ToString());
-                Error_progress.Report("The reponse code given back was " +e.Response.ResponseCode.ToString());
-
-
             };
 
             // Log when server is started.
@@ -88,7 +91,6 @@ namespace Local_Dns_Spoofer
             await _server.Listen();
         }
 
-
         /// <summary>
         /// Stops the server.
         /// </summary>
@@ -97,22 +99,17 @@ namespace Local_Dns_Spoofer
             _server.Dispose();
         }
 
+        #endregion 
 
         /// <summary>
         /// The resolver that will spoof the requests to a specified IP address.
         /// </summary>
         public class LocalRequestResolver : IRequestResolver
         {
-
-            // NXDOMAIN count would have to be here.
             public int Num_NXDOMAIN;
-
-
             public Dictionary<string, int> SessionList = new Dictionary<string, int>();
-
-
-
             public string _TargetIP;
+
             /// <summary>
             /// The task that will spoof all results.
             /// </summary>
@@ -130,10 +127,9 @@ namespace Local_Dns_Spoofer
                         IResourceRecord record = new IPAddressResourceRecord(question.Name, IPAddress.Parse(_TargetIP));
 
                         // Take into account the NXDOMAIN requests.
-                        //response.ResponseCode = ResponseCode.NameError; // NXDOMAIN. Now we can try to get back the IPENDPOINT to see if the request is by the person and go from there.
                         if (Num_NXDOMAIN > 0)
                         {
-                            // The && will prevent me from accessing something that doesn't exist in the list.
+                            // The && will prevent it from accessing something that doesn't exist in the list.
                             if (SessionList.ContainsKey(question.Name.ToString()) && SessionList[question.Name.ToString()] < Num_NXDOMAIN)
                             {
                                 // send NXDOMAIN Back

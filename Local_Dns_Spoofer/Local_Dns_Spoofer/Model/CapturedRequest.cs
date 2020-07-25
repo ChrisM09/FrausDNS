@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 namespace Local_Dns_Spoofer
 {
     /// <summary>
-    /// Instance of a captured request for use in the CaptureWindow
+    /// A request that was captured.
     /// </summary>
     public class CapturedRequest
     {
+        /// <summary>
+        /// Creates an instance of a captured request object.
+        /// </summary>
+        /// <param name="_data">The data that was sent to the local DNS server.</param>
         public CapturedRequest(byte[] _data)
         {
             data = _data;

@@ -1,14 +1,8 @@
-﻿using DNS.Server;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using System.Net;
 using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
 
 namespace Local_Dns_Spoofer
 {

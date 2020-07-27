@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Updated ApateDNS" Height="500" Width="800">
+        Title="Updated ApateDNS" Height="{StaticResource WindowHeight}"  Width="{StaticResource WindowWidth}"
+        ResizeMode="NoResize">
     
     <Grid>
         <TabControl TabStripPlacement="Top" Name="Tabs">
@@ -12,10 +13,6 @@
             <!-- DNS View Tab -->
             <TabItem Header="Capture Window" IsSelected="True">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="22*"/>
-                        <ColumnDefinition Width="109*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="1.25*"/>
@@ -23,8 +20,9 @@
                     </Grid.RowDefinitions>
 
                     <!-- DNS Capture Window -->
-                    <DataGrid Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True" Grid.ColumnSpan="2" 
-                              SelectedItem="{Binding SelectedRequest}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick">
+                    <DataGrid Name="CapturedRequests" Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True" Grid.ColumnSpan="2" 
+                              SelectedItem="{Binding SelectedRequest}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick" 
+                              AlternatingRowBackground="Gray">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
                             <DataGridTextColumn Header="Domain Requested" Binding="{Binding DomainRequested}"/>
@@ -33,8 +31,8 @@
                     </DataGrid>
 
                     <!-- Console Output Window -->
-                    <ScrollViewer Grid.Row="1" Background="Beige" Grid.ColumnSpan="2" >
-                        <TextBlock Text="{Binding OutputString}"/>
+                    <ScrollViewer Name="ConsoleOutput" Grid.Row="1" Background="Beige" Grid.ColumnSpan="2" >
+                        <TextBlock Name="TextOutput" Text="{Binding OutputString}" />
                     </ScrollViewer>
 
 
@@ -69,7 +67,7 @@
             </TabItem>
 
             <!-- Raw Hex View Tab-->
-            <TabItem Header="DNS Hex View" >
+            <TabItem Header="DNS Hex View" Style="{StaticResource TabItemHeaderStyle}">
                 <GroupBox Header="{Binding HeaderString}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -77,8 +75,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Margin="5" Text="{Binding HexByteOutput}"/>
-                        <TextBlock Grid.Column="1" Margin="5" Text="{Binding ConvertedOutput}"/>
+                        <TextBlock Grid.Column="0" Margin="5" Text="{Binding HexByteOutput}" Style="{StaticResource DnsHexViewTextblockStyle}"/>
+                        <TextBlock Grid.Column="1" Margin="5" Text="{Binding ConvertedOutput}" Style="{StaticResource DnsHexViewTextblockStyle}"/>
                     </Grid>
                 </GroupBox>
             </TabItem>

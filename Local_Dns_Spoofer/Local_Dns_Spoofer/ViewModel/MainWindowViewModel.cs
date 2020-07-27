@@ -1,20 +1,8 @@
-﻿using DNS.Protocol;
-using Local_Dns_Spoofer.ViewModel.Base;
+﻿using Local_Dns_Spoofer.ViewModel.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Local_Dns_Spoofer.ViewModel
 {
@@ -189,7 +177,7 @@ namespace Local_Dns_Spoofer.ViewModel
         /// <param name="text">Text to display on the screen.</param>
         private void updateOutput(string text)
         {
-            OutputString += "\n" + text;
+            OutputString += text + "\n";
         }
 
         /// <summary>
@@ -232,7 +220,7 @@ namespace Local_Dns_Spoofer.ViewModel
         {
             return !string.IsNullOrEmpty(SelectedInterface);
         }
-        
+
         /// <summary>
         /// Performs initial setup of the applcation. 
         /// </summary>
@@ -275,6 +263,7 @@ namespace Local_Dns_Spoofer.ViewModel
             }
             set
             {
+                HeaderString = value.DomainRequested + " Request Packet";
                 UpdateHexViewOutput(value.data);
                 _selectedRequest = value;
             }
@@ -288,8 +277,8 @@ namespace Local_Dns_Spoofer.ViewModel
         {
             string hex = Converters.byteToHex(replacement);
 
-            HexByteOutput = "Hex:\t" + Converters.formatHex(hex);
-            ConvertedOutput = "Regular: \t" + Converters.GetSimplifiedHexDump(hex);
+            HexByteOutput = Converters.formatHex(hex);
+            ConvertedOutput = Converters.GetSimplifiedHexDump(hex);
         }
 
         #endregion

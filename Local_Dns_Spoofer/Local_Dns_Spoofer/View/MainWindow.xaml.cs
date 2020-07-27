@@ -1,6 +1,8 @@
 ﻿using Local_Dns_Spoofer.ViewModel;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
+
 
 namespace Local_Dns_Spoofer
 {
@@ -12,15 +14,24 @@ namespace Local_Dns_Spoofer
         private readonly MainWindowViewModel mainWindowViewModel;
 
 
+        /// <summary>
+        /// Creates an instance of the Main Window.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
 
             mainWindowViewModel = new MainWindowViewModel();
 
+            // Not part of the View Model. Simply something on the UI. MVVM still maintained.
+            ((INotifyCollectionChanged)CapturedRequests.Items).CollectionChanged += (s, e) =>
+            {
+                if (CapturedRequests.Items.Count > 1)
+                    CapturedRequests.ScrollIntoView(CapturedRequests.Items[CapturedRequests.Items.Count - 1]);
+            };
+
+
             DataContext = mainWindowViewModel;
-
-
         }
 
         /// <summary>

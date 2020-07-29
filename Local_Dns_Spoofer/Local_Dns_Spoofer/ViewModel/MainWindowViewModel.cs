@@ -273,6 +273,10 @@ namespace Local_Dns_Spoofer.ViewModel
 
         #region Private DNS Hex View Methods
 
+        /// <summary>
+        /// Updates the console output window.
+        /// </summary>
+        /// <param name="replacement">The bytes that need to be translated.</param>
         private void UpdateHexViewOutput(byte[] replacement)
         {
             string hex = Converters.byteToHex(replacement);

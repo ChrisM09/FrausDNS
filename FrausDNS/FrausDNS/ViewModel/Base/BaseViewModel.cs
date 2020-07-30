@@ -1,7 +1,7 @@
 ﻿using PropertyChanged;
 using System.ComponentModel;
 
-namespace Local_Dns_Spoofer.ViewModel
+namespace FrausDNS.ViewModel
 {
 
     /// <summary>

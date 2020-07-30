@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Local_Dns_Spoofer.ViewModel.Base
+namespace FrausDNS.ViewModel.Base
 {
     /// <summary>
     /// Command that will run a given action.

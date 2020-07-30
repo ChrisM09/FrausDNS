@@ -4,7 +4,7 @@ using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     public class Utilities
     {

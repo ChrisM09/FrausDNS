@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     /// <summary>
     /// Interaction logic for App.xaml

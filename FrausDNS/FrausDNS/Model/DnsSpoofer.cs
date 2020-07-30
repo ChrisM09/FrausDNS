@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     /// <summary>
     /// A DNS spoofer that will give back a number of NXDOMAIN responses and

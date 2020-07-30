@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     /// <summary>
     /// Various regexes for use to check user input.

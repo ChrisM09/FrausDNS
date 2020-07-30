@@ -1,10 +1,10 @@
-﻿using Local_Dns_Spoofer.ViewModel.Base;
+﻿using FrausDNS.ViewModel.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace Local_Dns_Spoofer.ViewModel
+namespace FrausDNS.ViewModel
 {
     public class MainWindowViewModel : BaseViewModel, IDataErrorInfo
     {

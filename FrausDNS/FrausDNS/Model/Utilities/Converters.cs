@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     public class Converters
     {

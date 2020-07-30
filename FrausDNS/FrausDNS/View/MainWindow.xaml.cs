@@ -1,10 +1,10 @@
-﻿using Local_Dns_Spoofer.ViewModel;
+﻿using FrausDNS.ViewModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 
 
-namespace Local_Dns_Spoofer
+namespace FrausDNS
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

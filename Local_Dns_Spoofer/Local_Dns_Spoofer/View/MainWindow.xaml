@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Updated ApateDNS" Height="{StaticResource WindowHeight}"  Width="{StaticResource WindowWidth}"
+        Background="DimGray" Foreground="White"
         ResizeMode="NoResize">
-    
-    <Grid>
-        <TabControl TabStripPlacement="Top" Name="Tabs">
-            
+
+    <Grid Background="#101010">
+        <TabControl TabStripPlacement="Top" Name="Tabs" Background="#101010">
+
             <!-- DNS View Tab -->
-            <TabItem Header="Capture Window" IsSelected="True">
+            <TabItem Header="Capture Window" IsSelected="True" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
@@ -22,17 +23,22 @@
                     <!-- DNS Capture Window -->
                     <DataGrid Name="CapturedRequests" Grid.Row="0" ItemsSource="{Binding Requests}" ColumnWidth="*" IsReadOnly="True" Grid.ColumnSpan="2" 
                               SelectedItem="{Binding SelectedRequest}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick" 
-                              AlternatingRowBackground="Gray">
+                              Background="#1E1E1E" AlternatingRowBackground="LightGray">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="DarkGray" />
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
-                            <DataGridTextColumn Header="Domain Requested" Binding="{Binding DomainRequested}"/>
-                            <DataGridTextColumn Header="Dns Returned" Binding="{Binding DnsReturned}"/>
+                            <DataGridTextColumn Header=" Time" Binding="{Binding Time}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
+                            <DataGridTextColumn Header=" Domain Requested" Binding="{Binding DomainRequested}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
+                            <DataGridTextColumn Header=" Dns Returned" Binding="{Binding DnsReturned}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
                     <!-- Console Output Window -->
-                    <ScrollViewer Name="ConsoleOutput" Grid.Row="1" Background="Beige" Grid.ColumnSpan="2" >
-                        <TextBlock Name="TextOutput" Text="{Binding OutputString}" />
+                    <ScrollViewer Name="ConsoleOutput" Grid.Row="1" Background="#1E1E1E" Grid.ColumnSpan="2" >
+                        <TextBlock Name="TextOutput" Text="{Binding OutputString}" Foreground="White"/>
                     </ScrollViewer>
 
 
@@ -55,19 +61,22 @@
                         <StackPanel Orientation="Vertical" Grid.Column="1">
                             <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="15"/>
                             <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                            <ComboBox Style="{StaticResource SelectedInterfaceComboxStyle}" ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+                                      ItemContainerStyle="{DynamicResource ComboBoxItemStyle1}" Template="{DynamicResource ComboBoxControlTemplate1}" 
+                                      Foreground="White" Margin="15,5,0,5"
+                                      />
                         </StackPanel>
 
 
                         <!-- Buttons -->
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}" IsEnabled="{Binding StartServerEnabled}"/>
-                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}" IsEnabled="{Binding StopServerEnabled}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Top"  Content="Start Server" Command="{Binding StartServer}" IsEnabled="{Binding StartServerEnabled}" Template="{DynamicResource ButtonBaseControlTemplate1}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Start_Stop_Button_Style}" VerticalAlignment="Bottom" Content="Stop Server" Command="{Binding StopServer}" IsEnabled="{Binding StopServerEnabled}"  Template="{DynamicResource ButtonBaseControlTemplate1}"/>
                     </Grid>
                 </Grid>
             </TabItem>
 
             <!-- Raw Hex View Tab-->
-            <TabItem Header="DNS Hex View" Style="{StaticResource TabItemHeaderStyle}">
+            <TabItem Header="DNS Hex View" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
                 <GroupBox Header="{Binding HeaderString}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -75,7 +84,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Margin="5" Text="{Binding HexByteOutput}" Style="{StaticResource DnsHexViewTextblockStyle}"/>
+                        <TextBlock Grid.Column="0" Margin="5" Text="{Binding HexByteOutput}" Style="{StaticResource DnsHexViewTextblockStyle}" Grid.ColumnSpan="2"/>
                         <TextBlock Grid.Column="1" Margin="5" Text="{Binding ConvertedOutput}" Style="{StaticResource DnsHexViewTextblockStyle}"/>
                     </Grid>
                 </GroupBox>

@@ -22,11 +22,11 @@ Original intention is to isolate malware and observe its network activity.
 Tab displayed that shows all DNS requests that are made by the local machine. Includes a console output window to show messages from the application. Allows the user to change the reply IP, number of NXDomain responses, and the affected interface. 
 
 
-Changing the value inside the *Dns Reply IP* textbox will change the IP address response that the application will return to any DNS request. This must be in the form of *xxx.xxx.xxx.xxx*. The application will attempt to default this to the local machine itself using the IP address on the first network interface that is detected.
+*DNS Reply IP*: IP address that will be returned to any DNS request. Defaults to current DNS.
 
-Changing the value inside the *NXDOMAIN's* textbox will change the number of NXDOMAIN (response code 3) responses that will be sent per domain. Intention for this is to allow malware to cycle through its different domains if it has them. Input has to be an integer. 
+*# of NXDOMAINs*: Number of NXDOMAIN responses sent per domain.
 
-Changing the value inside the *Selected Interface* dropdown will change the affected network interface on the machine that will have it's DNS Server Search Order set to the loopback address.
+*Selected Interface*: Network interface that will have its DNS Server Search Order affected.
 
 After modifying the options to the user's preferences, then press the *Start Server* button. 
 

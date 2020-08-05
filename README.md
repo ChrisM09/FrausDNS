@@ -51,6 +51,7 @@ The hex bytes on the left represent the data in the request. The string on the r
 Once finished, the *Stop Server* button must be pressed to stop the server to clear the DNS Server Search Order. 
 
 
+<img src="Images/ServerStoppedScreenshot.PNG" width="600">
 
 ---
 

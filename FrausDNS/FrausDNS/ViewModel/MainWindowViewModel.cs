@@ -16,7 +16,7 @@ namespace FrausDNS.ViewModel
         /// </summary>
         public MainWindowViewModel()
         {
-            initialSetup(); 
+            initialSetup();
         }
 
         #endregion
@@ -108,6 +108,8 @@ namespace FrausDNS.ViewModel
                 return _serverStarted == true;
             }
         }
+        public bool DropdownEnabled { get; set; }
+        public bool ReadOnly { get; set; }
         public ObservableCollection<CapturedRequest> Requests { get; set; }
         public List<string> NetworkInterfaces { get; set; }
         public string UserTargetIP { get; set; }
@@ -133,7 +135,7 @@ namespace FrausDNS.ViewModel
 
             // Change the local DNS Server to localhost on a given NW interface.
             string error_message;
-            Utilities.ChangeLocalDnsServer(NetworkInterfaces[0], out error_message);
+            Utilities.ChangeLocalDnsServer(SelectedInterface, out error_message);
             updateOutput(error_message);
             
             updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
@@ -148,6 +150,8 @@ namespace FrausDNS.ViewModel
 
             _spoofer = new DnsSpoofer(UserTargetIP, int.Parse(UserNXDOMAIN));
             _serverStarted = true;
+            ReadOnly = true;
+            DropdownEnabled = false;
 
             // Start the server and have it report back.
             await _spoofer.Start(_capturedRequestProgress, _errorMessageProgress);
@@ -160,15 +164,17 @@ namespace FrausDNS.ViewModel
         {
             string error_message;
 
-            Utilities.ResetLocalDnsServer(NetworkInterfaces[0], out error_message);
+            Utilities.ResetLocalDnsServer(SelectedInterface, out error_message);
 
             updateOutput(error_message);
 
             _spoofer.Stop();
 
             _serverStarted = false;
+            ReadOnly = false;
+            DropdownEnabled = true;
 
-            updateOutput("Server Stopped.");
+            updateOutput("[+] Server Stopped.");
         }
 
         /// <summary>
@@ -234,6 +240,8 @@ namespace FrausDNS.ViewModel
             SelectedInterface = defaultDns.Item1;
             UserTargetIP = defaultDns.Item2;
             UserNXDOMAIN = "0";
+            ReadOnly = false;
+            DropdownEnabled = true;
 
             StartServer = new RelayCommand(startServer);
             StopServer = new RelayCommand(stopServer);

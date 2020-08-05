@@ -4,15 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Updated ApateDNS" Height="{StaticResource WindowHeight}"  Width="{StaticResource WindowWidth}"
-        Background="DimGray" Foreground="White"
+        Title="FrausDNS" Height="{StaticResource WindowHeight}"  Width="{StaticResource WindowWidth}"
         ResizeMode="NoResize">
 
     <Grid Background="#101010">
         <TabControl TabStripPlacement="Top" Name="Tabs" Background="#101010">
 
             <!-- DNS View Tab -->
-            <TabItem Header="Capture Window" IsSelected="True" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
+            <TabItem Header="Captured Requests" IsSelected="True" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
@@ -30,9 +29,9 @@
                             </Style>
                         </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header=" Time" Binding="{Binding Time}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
-                            <DataGridTextColumn Header=" Domain Requested" Binding="{Binding DomainRequested}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
-                            <DataGridTextColumn Header=" Dns Returned" Binding="{Binding DnsReturned}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
+                            <DataGridTextColumn Header=" Timestamp" Binding="{Binding Time}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
+                            <DataGridTextColumn Header=" Requested Domain" Binding="{Binding DomainRequested}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
+                            <DataGridTextColumn Header=" Response Code" Binding="{Binding DnsReturned}" HeaderStyle="{StaticResource DataGridColumnHeaderStyle}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -52,16 +51,16 @@
 
                         <!-- Three textblocks (Reply IP, NXDOMAIN, Interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="0">
-                            <TextBlock Text="DNS Reply IP (Default: Current Gateway/DNS):" Style="{StaticResource InputLabelTextblockStyle}"/>
-                            <TextBlock Text="# of NXDOMAIN's:" Style="{StaticResource InputLabelTextblockStyle}"/>
+                            <TextBlock Text="IP Response (Default: Current DNS):" Style="{StaticResource InputLabelTextblockStyle}"/>
+                            <TextBlock Text="# of NXDOMAIN Responses:" Style="{StaticResource InputLabelTextblockStyle}"/>
                             <TextBlock Text="Selected Interface:" Style="{StaticResource InputLabelTextblockStyle}"/>
                         </StackPanel>
 
                         <!-- 2 Textboxes (Reply IP and NXDOMAIN inputs) and 1 dropdown (interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="1">
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="15"/>
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                            <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" IsReadOnly="{Binding ReadOnly}"/>
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding ReadOnly}"/>
+                            <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DropdownEnabled}" 
                                       ItemContainerStyle="{DynamicResource ComboBoxItemStyle1}" Template="{DynamicResource ComboBoxControlTemplate1}" 
                                       Foreground="White" Margin="15,5,0,5"
                                       />
@@ -76,7 +75,7 @@
             </TabItem>
 
             <!-- Raw Hex View Tab-->
-            <TabItem Header="DNS Hex View" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
+            <TabItem Header="Request as Hex" Template="{DynamicResource TabItemControlTemplate1}" Foreground="White">
                 <GroupBox Header="{Binding HeaderString}">
                     <Grid>
                         <Grid.ColumnDefinitions>

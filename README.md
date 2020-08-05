@@ -17,14 +17,14 @@ Original intention is to isolate malware and observe its network activity.
 
 <img src="Images/HomeScreenShot.PNG" width="600">
 
-### Capture Window 
+### Captured Requests 
 
 Tab displayed that shows all DNS requests that are made by the local machine. Includes a console output window to show messages from the application. Allows the user to change the reply IP, number of NXDomain responses, and the affected interface. 
 
 
-*DNS Reply IP*: IP address that will be returned to any DNS request. Defaults to current DNS.
+*IP Response*: IP address that will be returned to any DNS request. Defaults to current DNS.
 
-*# of NXDOMAINs*: Number of NXDOMAIN responses sent per domain.
+*# of NXDOMAIN Responses*: Number of NXDOMAIN responses sent per domain.
 
 *Selected Interface*: Network interface that will have its DNS Server Search Order affected.
 
@@ -34,13 +34,13 @@ After modifying the options to the user's preferences, then press the *Start Ser
 
 <img src="Images/ServerStartedScreenshot.PNG" width="600">
 
-Once the button is pressed, then the server will start listening for DNS requests and responds to them using the User-specified IP address. 
+Once the button is pressed, then the server will start listening for DNS requests and responds to them using the user-specified IP address. 
 
 If the number of NXDOMAIN responses is greater than 0, then there will be that many NXDOMAIN entries in the capture window per domain as they come in.
 
-The console will summarize the various settings that were set. Captured DNS requests will be logged into the capture window with their timestamp, requested domain and the response code that the server gave back. If you want to look at a specific DNS request and its data that was sent, you can double click an entry and the Hex View will be shown. Also, you can single click and manually click the Hex View Tab.
+The console will summarize the various settings that were set. Captured DNS requests will be logged into the capture window with their timestamp, requested domain and the response code that the server gave back. If you want to look at a specific DNS request and its data that was sent, you can double click an entry and the hex will be shown. Also, you can single click and manually click the *Request as Hex* Tab.
 
-### DNS Hex View
+### Request as Hex
 
 <img src="Images/HexViewScreenshot.PNG" width="600">
 

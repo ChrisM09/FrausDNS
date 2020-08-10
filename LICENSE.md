@@ -25,6 +25,7 @@ SOFTWARE.
 
 ### DNS
 > Copyright (c) 2019 Mirza Kapetanovic
+
 License: MIT
 
 ## Third Party License Text

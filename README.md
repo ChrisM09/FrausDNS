@@ -1,5 +1,5 @@
 # FrausDNS
-Tool designed to capture DNS requests made from the local machine and spoof responses with a specified IP address. 
+Windows tool designed to capture DNS requests made from the local machine and spoof responses with a specified IP address. 
 Original intention is to isolate malware and observe its network activity.
 
 ---

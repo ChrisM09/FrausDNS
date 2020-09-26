@@ -79,7 +79,7 @@ namespace FrausDNS
             // Log when server is started.
             _server.Listening += (sender, e) =>
             {
-                Error_progress.Report($"[+] Server stated successfully at {DateTime.Now.ToString()}");
+                Error_progress.Report($"[+] Server started successfully at {DateTime.Now.ToString()}");
             };
 
             // Log when there's an error in the server.

@@ -10,7 +10,7 @@ Original intention is to isolate malware and observe its network activity.
   - The DNS Server Search Order will be reset during execution. 
   - The server must be stopped to reset the DNS Server Search Order.
   - Original search order settings are not preserved.
-  
+  - The loopback address shown is optional. Solely used for demonstration.
 ---
 
 ## Using FrausDNS

@@ -1,6 +1,6 @@
 # FrausDNS
 Windows tool designed to capture DNS requests made from the local machine and spoof responses with a specified IP address. 
-Original intention is to isolate malware and observe its network activity.
+Original intention is to isolate malware and observe its network activity. FrausDNS serves as an alternative to ApateDnS, which is obosolete.
 
 ---
 
@@ -17,10 +17,7 @@ Original intention is to isolate malware and observe its network activity.
 
 <img src="Images/HomeScreenShot.PNG" width="600">
 
-### Captured Requests 
-
-Tab displayed that shows all DNS requests that are made by the local machine. Includes a console output window to show messages from the application. Allows the user to change the reply IP, number of NXDomain responses, and the affected interface. 
-
+FrausDNS allows the user to change the reply IP, number of NXDomain responses, and the affected network interface. 
 
 *IP Response*: IP address that will be returned to any DNS request. Defaults to current DNS.
 
@@ -29,6 +26,10 @@ Tab displayed that shows all DNS requests that are made by the local machine. In
 *Selected Interface*: Network interface that will have its DNS Server Search Order affected.
 
 After modifying the options to the user's preferences, then press the *Start Server* button. 
+
+### Captured Requests 
+
+This tab shows all DNS requests that are made by the local machine. Includes a console output window to show messages from the application. 
 
 ### While Running
 
@@ -44,7 +45,7 @@ The console will summarize the various settings that were set. Captured DNS requ
 
 <img src="Images/HexViewScreenshot.PNG" width="600">
 
-Tab displayed that will show the hex bytes that were sent to the DNS server.
+This tab shows the hex bytes that were sent to the DNS server.
 
 The hex bytes on the left represent the data in the request. The string on the right side of the screen is a simplified readable version of the hex bytes. It is shown in the form of alphanumeric characters (A-Z, a-z, 0-9) with any other characters being represented as ".". 
 

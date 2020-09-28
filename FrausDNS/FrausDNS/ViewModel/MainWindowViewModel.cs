@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Net;
 
 namespace FrausDNS.ViewModel
 {
@@ -130,6 +131,16 @@ namespace FrausDNS.ViewModel
         /// </summary>
         private async void startServer()
         {
+            try
+            {
+                IPAddress.Parse(UserTargetIP);
+            }
+            catch(Exception e)
+            {
+                updateOutput($"[-] {e.Message}");
+                return;
+            }
+
             // Print the configuration options here to the console.
             updateOutput($"[+] Using IP address {UserTargetIP} for DNS replies.");
 

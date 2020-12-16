@@ -7,9 +7,6 @@ Original intention is to isolate malware and observe its network activity. Fraus
 ## Notes
   - ***Must be run with elevated privileges (run as administrator)***.
   - The local DNS server on the local machine will be changed to the loopback address (127.0.0.1). 
-  - The DNS Server Search Order will be reset during execution. 
-  - The server must be stopped to reset the DNS Server Search Order.
-  - Original search order settings are not preserved.
   - The loopback address shown is optional. Solely used for demonstration.
 ---
 
@@ -49,7 +46,7 @@ This tab shows the hex bytes that were sent to the DNS server.
 
 The hex bytes on the left represent the data in the request. The string on the right side of the screen is a simplified readable version of the hex bytes. It is shown in the form of alphanumeric characters (A-Z, a-z, 0-9) with any other characters being represented as ".". 
 
-Once finished, the *Stop Server* button must be pressed to stop the server to clear the DNS Server Search Order. 
+Once finished, the *Stop Server* button must be pressed to stop the server and reset the DNS Server Search Order. 
 
 
 <img src="Images/ServerStoppedScreenshot.PNG" width="600">

@@ -96,7 +96,6 @@ namespace FrausDNS
         /// </summary>
         /// <param name="interface_name">Interface to change.</param>
         /// <param name="errorMessage">Status message that will contain either an error or a pass message.</param>
-        /// <remarks>Note that all previous DNS orderings will be lost.</remarks>
         public static void ResetLocalDnsServer(string interface_name, List<string> original_settings, out string errorMessage, bool autoDNS)
         {
             // Get the actual network interface to work with.

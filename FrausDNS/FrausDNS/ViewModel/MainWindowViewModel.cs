@@ -137,7 +137,7 @@ namespace FrausDNS.ViewModel
         private async void startServer()
         {
             // Need to capture in a try-finally block because if a user shuts the service
-            // down while the server is running, the DNS Server Search Order still needs to be reset.
+            // down while the server is running, the DNS Server Search Order still needs to be restored.
             try
             {
                 try

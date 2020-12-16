@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Net.NetworkInformation;
 
 namespace FrausDNS
@@ -29,8 +31,9 @@ namespace FrausDNS
         /// <param name="interface_name">Network interface to change.</param>
         /// <param name="errorMessage">Status message that will contain either an error or a pass message.</param>
         /// <remarks> Must run as an administrator to see the desired effect.</remarks>
-        public static void ChangeLocalDnsServer(string interface_name, out string errorMessage)
+        public static void ChangeLocalDnsServer(string interface_name, out string errorMessage, out List<string> originalDNSAddresses, out bool autoDNS)
         {
+            // This value needs to be hard coded to begin the spoofing.
             string[] Dns = { "127.0.0.1" };
 
             // Get the actual network interface to work with.
@@ -42,9 +45,24 @@ namespace FrausDNS
             if(nics == null)
             {
                 errorMessage = "[!] There is not an active network interface with the name " + interface_name;
+                originalDNSAddresses = null;
+                autoDNS = false;
+                return;
             }
 
             NetworkInterface currentInterface = nics[0];
+            IPInterfaceProperties ipProperties = currentInterface.GetIPProperties();
+            List<IPAddress> originalIPs = ipProperties.DnsAddresses.ToList();
+
+            List<string> tempOriginalIPs = new List<string>();
+            foreach(IPAddress ip in originalIPs)
+            {
+                tempOriginalIPs.Add(ip.ToString());
+            }
+            originalDNSAddresses = tempOriginalIPs;
+
+            autoDNS = DNSAuto(currentInterface.Id);
+
 
             // We found the interface here so now we can continue with changing.
             ManagementClass MC = new ManagementClass("Win32_NetworkAdapterConfiguration");
@@ -79,7 +97,7 @@ namespace FrausDNS
         /// <param name="interface_name">Interface to change.</param>
         /// <param name="errorMessage">Status message that will contain either an error or a pass message.</param>
         /// <remarks>Note that all previous DNS orderings will be lost.</remarks>
-        public static void ResetLocalDnsServer(string interface_name, out string errorMessage)
+        public static void ResetLocalDnsServer(string interface_name, List<string> original_settings, out string errorMessage, bool autoDNS)
         {
             // Get the actual network interface to work with.
             List<NetworkInterface> nics = NetworkInterface.GetAllNetworkInterfaces().Where((i) => 
@@ -106,16 +124,19 @@ namespace FrausDNS
                         ManagementBaseObject dns = MO.GetMethodParameters("SetDNSServerSearchOrder");
                         if(dns != null)
                         {
-                            dns["DNSServerSearchOrder"] = null;
+                            if (autoDNS)
+                                dns["DNSServerSearchOrder"] = null;
+                            else
+                                dns["DNSServerSearchOrder"] = original_settings.ToArray();
+
                             MO.InvokeMethod("SetDNSServerSearchOrder", dns, null);
                         }
                     }
                 }
             }
 
-            // Reset successful. Not to original specs but reset.
-            errorMessage = "[+] Dns reset complete. Dns search order now empty.";
-
+            // Reset successful.
+            errorMessage = "[+] Dns reset complete. Dns search order restored to original settings.";
         }
 
         /// <summary>
@@ -143,5 +164,19 @@ namespace FrausDNS
             }
             return result;
         }
+
+        /// <summary>
+        /// Determines if the "Obtain DNS server address automatically" option is enabled in the specified network adapter.
+        /// </summary>
+        /// <param name="NetworkAdapterGUID">The ID of the desired network adapter.</param>
+        /// <returns>Returns true or false if the option is enabled.</returns>
+        private static bool DNSAuto(string NetworkAdapterGUID)
+        {
+            string path = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\" + NetworkAdapterGUID;
+            string ns = (string)Registry.GetValue(path, "Nameserver", null);
+            return string.IsNullOrEmpty(ns);
+
+        }
+
     }
 }

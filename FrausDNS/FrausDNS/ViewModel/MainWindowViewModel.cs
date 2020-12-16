@@ -86,6 +86,9 @@ namespace FrausDNS.ViewModel
         private Progress<CapturedRequest> _capturedRequestProgress { get; set; }
         private Progress<string> _errorMessageProgress { get; set; }
         private bool _serverStarted { get; set; }
+        private List<string> _original_DNS_Search_Order;
+        private bool _autoDNS;
+
         #endregion
 
         #region Public Capture Window Members 
@@ -117,6 +120,8 @@ namespace FrausDNS.ViewModel
         public string UserNXDOMAIN { get; set; }
         public string SelectedInterface { get; set; }
         public string OutputString { get; set; }
+        public bool serverStopped { get; set; }
+
         #endregion
 
         #region Public Capture Window Commands
@@ -131,41 +136,52 @@ namespace FrausDNS.ViewModel
         /// </summary>
         private async void startServer()
         {
+            // Need to capture in a try-finally block because if a user shuts the service
+            // down while the server is running, the DNS Server Search Order still needs to be reset.
             try
             {
-                IPAddress.Parse(UserTargetIP);
+                try
+                {
+                    IPAddress.Parse(UserTargetIP);
+                }
+                catch (Exception e)
+                {
+                    updateOutput($"[-] {e.Message}");
+                    return;
+                }
+
+                // Print the configuration options here to the console.
+                updateOutput($"[+] Using IP address {UserTargetIP} for DNS replies.");
+
+                // Change the local DNS Server to localhost on a given NW interface.
+                string error_message;
+                Utilities.ChangeLocalDnsServer(SelectedInterface, out error_message, out _original_DNS_Search_Order, out _autoDNS);
+                updateOutput(error_message);
+
+                updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
+
+                // Captured Request gotten from the server.
+                _capturedRequestProgress = new Progress<CapturedRequest>();
+                _capturedRequestProgress.ProgressChanged += (sender, e) => { Requests.Add(e); };
+
+                // Error Message gotten from the server.
+                _errorMessageProgress = new Progress<string>();
+                _errorMessageProgress.ProgressChanged += (sender, e) => { updateOutput(e); };
+
+                _spoofer = new DnsSpoofer(UserTargetIP, int.Parse(UserNXDOMAIN));
+                _serverStarted = true;
+                serverStopped = false;
+                ReadOnly = true;
+                DropdownEnabled = false;
+
+                // Start the server and have it report back.
+                await _spoofer.Start(_capturedRequestProgress, _errorMessageProgress);
             }
-            catch(Exception e)
+            finally
             {
-                updateOutput($"[-] {e.Message}");
-                return;
+                if(!serverStopped)
+                    StopServer.Execute(null);
             }
-
-            // Print the configuration options here to the console.
-            updateOutput($"[+] Using IP address {UserTargetIP} for DNS replies.");
-
-            // Change the local DNS Server to localhost on a given NW interface.
-            string error_message;
-            Utilities.ChangeLocalDnsServer(SelectedInterface, out error_message);
-            updateOutput(error_message);
-            
-            updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
-
-            // Captured Request gotten from the server.
-            _capturedRequestProgress = new Progress<CapturedRequest>();
-            _capturedRequestProgress.ProgressChanged += (sender, e) => { Requests.Add(e); };
-
-            // Error Message gotten from the server.
-            _errorMessageProgress = new Progress<string>();
-            _errorMessageProgress.ProgressChanged += (sender, e) => { updateOutput(e); };
-
-            _spoofer = new DnsSpoofer(UserTargetIP, int.Parse(UserNXDOMAIN));
-            _serverStarted = true;
-            ReadOnly = true;
-            DropdownEnabled = false;
-
-            // Start the server and have it report back.
-            await _spoofer.Start(_capturedRequestProgress, _errorMessageProgress);
         }
 
         /// <summary>
@@ -175,7 +191,7 @@ namespace FrausDNS.ViewModel
         {
             string error_message;
 
-            Utilities.ResetLocalDnsServer(SelectedInterface, out error_message);
+            Utilities.ResetLocalDnsServer(SelectedInterface, _original_DNS_Search_Order, out error_message, _autoDNS);
 
             updateOutput(error_message);
 
@@ -184,6 +200,7 @@ namespace FrausDNS.ViewModel
             _serverStarted = false;
             ReadOnly = false;
             DropdownEnabled = true;
+            serverStopped = true;
 
             updateOutput("[+] Server Stopped.");
         }
@@ -253,6 +270,8 @@ namespace FrausDNS.ViewModel
             UserNXDOMAIN = "0";
             ReadOnly = false;
             DropdownEnabled = true;
+            serverStopped = true;
+            _original_DNS_Search_Order = new List<string>();
 
             StartServer = new RelayCommand(startServer);
             StopServer = new RelayCommand(stopServer);

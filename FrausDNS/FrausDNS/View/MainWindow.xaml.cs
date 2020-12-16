@@ -1,4 +1,5 @@
 ﻿using FrausDNS.ViewModel;
+using System;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
@@ -44,5 +45,24 @@ namespace FrausDNS
             Tabs.SelectedIndex = 1;
             e.Handled = true;
         }
+
+        /// <summary>
+        /// Tells if the window was closed. 
+        /// </summary>
+        public bool IsClosed { get; private set; }
+
+        /// <summary>
+        /// Overrided function that handles the OnClosed event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            IsClosed = true;
+
+            if (!mainWindowViewModel.serverStopped)
+                mainWindowViewModel.StopServer.Execute(null);
+        }
+
     }
 }

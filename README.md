@@ -7,7 +7,7 @@ Original intention is to isolate malware and observe its network activity. Fraus
 ## Notes
   - ***Must be run with elevated privileges (run as administrator)***.
   - The local DNS server on the local machine will be changed to the loopback address (127.0.0.1). 
-  - The loopback address shown is optional. Solely used for demonstration. It shall be changed to an IP address to which the network traffic is redirected.
+  - The loopback address shown is optional. Solely used for demonstration. It shall be changed to an IP address to which the network traffic generated at the local machine is redirected.
 ---
 
 ## Using FrausDNS

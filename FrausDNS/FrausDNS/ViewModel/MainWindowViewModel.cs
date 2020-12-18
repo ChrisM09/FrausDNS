@@ -43,10 +43,10 @@ namespace FrausDNS.ViewModel
                 {
                     case "UserTargetIP":
                         {
-                            // Check here for matching up against a certain form (regex?)
+                            // Check if the target IP is a valid IPv4 or IPv6 address
                             if (!isUserTargetIPValid())
                             {
-                                error_message = "IP not in the form xxx.xxx.xxx.xxx";
+                                error_message = "IP not a valid IPv4 or IPv6 address.";
                             }
                             break;
                         }
@@ -155,7 +155,12 @@ namespace FrausDNS.ViewModel
 
                 // Change the local DNS Server to localhost on a given NW interface.
                 string error_message;
-                Utilities.ChangeLocalDnsServer(SelectedInterface, out error_message, out _original_DNS_Search_Order, out _autoDNS);
+                if (!Utilities.ChangeLocalDnsServer(SelectedInterface, out error_message, out _original_DNS_Search_Order, out _autoDNS))
+                {
+                    updateOutput(error_message);
+                    return;
+                }
+
                 updateOutput(error_message);
 
                 updateOutput($"[+] Sending {UserNXDOMAIN} NXDOMAIN replies to clients.");
@@ -230,7 +235,8 @@ namespace FrausDNS.ViewModel
         {
             return 
                 !string.IsNullOrWhiteSpace(UserTargetIP) &&
-                Regexes.IPAddressForm.IsMatch(UserTargetIP);
+                (Regexes.IPv6AddressForm.IsMatch(UserTargetIP) ||
+                Regexes.IPv4AddressForm.IsMatch(UserTargetIP));
         }
 
         /// <summary>

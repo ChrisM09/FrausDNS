@@ -58,7 +58,7 @@
 
                         <!-- 2 Textboxes (Reply IP and NXDOMAIN inputs) and 1 dropdown (interface)-->
                         <StackPanel Orientation="Vertical" Grid.Column="1">
-                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" IsReadOnly="{Binding ReadOnly}"/>
+                            <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Stretch" Text="{Binding UserTargetIP, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="40" IsReadOnly="{Binding ReadOnly}"/>
                             <TextBox Style="{StaticResource UserInputTextboxStyle}"  HorizontalAlignment="Left" Width="30" Text="{Binding UserNXDOMAIN, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding ReadOnly}"/>
                             <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedInterface, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DropdownEnabled}" 
                                       ItemContainerStyle="{DynamicResource ComboBoxItemStyle1}" Template="{DynamicResource ComboBoxControlTemplate1}" 
